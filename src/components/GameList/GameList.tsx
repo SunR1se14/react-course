@@ -4,13 +4,17 @@ import { IGame } from '../../types/game.interface'
 import { IResponse } from '../../types/response,interface'
 import styles from './GameList.module.scss'
 
+interface Props {
+  searchGames: IGame[]
+  isLoadingSearchGames: boolean
+}
 interface State {
   games: IGame[]
   isLoading: boolean
 }
 
-class GameList extends Component<Record<string, never>, State> {
-  constructor(props: Record<string, never>) {
+class GameList extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = {
       games: [],
@@ -40,8 +44,18 @@ class GameList extends Component<Record<string, never>, State> {
   render() {
     const { games, isLoading } = this.state
 
-    if (isLoading) {
+    if (isLoading || this.props.isLoadingSearchGames) {
       return <div className={styles['loading']}>Loading...</div>
+    }
+
+    if (this.props.searchGames.length) {
+      return (
+        <div className={styles['card-list']}>
+          {this.props.searchGames.map(game => (
+            <GameCard key={game.id} {...game} />
+          ))}
+        </div>
+      )
     }
 
     return (

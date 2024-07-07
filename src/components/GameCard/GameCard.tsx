@@ -2,6 +2,7 @@ import { Component } from 'react'
 import cn from 'clsx'
 import { IGame } from '../../types/game.interface'
 import styles from './GameCard.module.scss'
+import NoImage from '../../assets/no-image.jpg'
 
 class GameCard extends Component<IGame> {
   bgRating = () => {
@@ -22,7 +23,11 @@ class GameCard extends Component<IGame> {
     return (
       <div className={styles.card}>
         <div className={styles.img}>
-          <img src={background_image} alt="Game image" />
+          {background_image ? (
+            <img src={background_image} alt="Game image" />
+          ) : (
+            <img src={NoImage} alt="No image" />
+          )}
         </div>
         <h4 className={styles.title}>{name}</h4>
         <div className={cn(styles.rating, this.bgRating())}>
