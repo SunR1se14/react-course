@@ -18,12 +18,23 @@ class Search extends Component<IProps, IState> {
     e.preventDefault()
     if (this.state.searchValue) {
       this.props.search(this.state.searchValue)
-      this.setState({ searchValue: '' })
+      localStorage.setItem(
+        'searchValue',
+        JSON.stringify(this.state.searchValue.trim()),
+      )
     }
   }
 
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchValue: e.target.value })
+  }
+
+  componentDidMount() {
+    const savedSearchValue = localStorage.getItem('searchValue')
+    if (savedSearchValue) {
+      this.setState({ searchValue: JSON.parse(savedSearchValue) })
+      this.props.search(savedSearchValue)
+    }
   }
 
   render() {
