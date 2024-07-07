@@ -40,4 +40,9 @@
   &:hover {
     background-color: #0263be;
   }
+
+  @media (max-width: 575.98px) {
+    max-width: 100px;
+    height: 50px;
+  }
 }
