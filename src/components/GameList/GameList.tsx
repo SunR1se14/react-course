@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import GameCard from '../GameCard/GameCard'
 import { IGame } from '../../types/game.interface'
 import { IResponse } from '../../types/response,interface'
@@ -8,64 +8,51 @@ interface Props {
   searchGames: IGame[]
   isLoadingSearchGames: boolean
 }
-interface State {
-  games: IGame[]
-  isLoading: boolean
-}
 
-class GameList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      games: [],
-      isLoading: false,
-    }
-  }
+const GameList = ({ searchGames, isLoadingSearchGames }: Props) => {
+  const [games, setGames] = useState<IGame[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  async getGamesData() {
+  const getGamesData = async () => {
     try {
-      this.setState({ isLoading: true })
+      setIsLoading(true)
       const res = await fetch(
         'https://api.rawg.io/api/games?key=a2a625bfa01a46bbb1a130f28fc8ee34&page_size=9&page=1',
       )
       const data: IResponse = await res.json()
-      this.setState({ games: data.results })
+      setGames(data.results)
     } catch (error) {
       console.error(error)
     } finally {
-      this.setState({ isLoading: false })
+      setIsLoading(false)
     }
   }
 
-  componentDidMount() {
-    this.getGamesData()
+  useEffect(() => {
+    getGamesData()
+  }, [])
+
+  if (isLoading || isLoadingSearchGames) {
+    return <div className={styles['loading']}>Loading...</div>
   }
 
-  render() {
-    const { games, isLoading } = this.state
-
-    if (isLoading || this.props.isLoadingSearchGames) {
-      return <div className={styles['loading']}>Loading...</div>
-    }
-
-    if (this.props.searchGames.length) {
-      return (
-        <div className={styles['card-list']}>
-          {this.props.searchGames.map(game => (
-            <GameCard key={game.id} {...game} />
-          ))}
-        </div>
-      )
-    }
-
+  if (searchGames.length) {
     return (
       <div className={styles['card-list']}>
-        {games.map(game => (
+        {searchGames.map(game => (
           <GameCard key={game.id} {...game} />
         ))}
       </div>
     )
   }
+
+  return (
+    <div className={styles['card-list']}>
+      {games.map(game => (
+        <GameCard key={game.id} {...game} />
+      ))}
+    </div>
+  )
 }
 
 export default GameList
