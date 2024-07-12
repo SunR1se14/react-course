@@ -1,26 +1,27 @@
-import { FormEvent, useState, useEffect } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import styles from './Search.module.scss'
+import useLocalStorage from '../../hooks/useLocalStorage'
 
 interface IProps {
   search: (value: string) => void
 }
 
 const Search = ({ search }: IProps) => {
-  const [searchValue, setSearchValue] = useState<string>('')
+  const [searchValue, setSearchValue] = useLocalStorage<string>(
+    'searchValue',
+    '',
+  )
+  const [inputValue, setInputValue] = useState<string>(searchValue)
 
   useEffect(() => {
-    const savedSearchValue = localStorage.getItem('searchValue')
-    if (savedSearchValue) {
-      setSearchValue(JSON.parse(savedSearchValue))
-      search(savedSearchValue)
-    }
-  }, [search])
+    search(searchValue)
+  }, [search, searchValue])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (searchValue) {
-      search(searchValue)
-      localStorage.setItem('searchValue', JSON.stringify(searchValue.trim()))
+    if (inputValue) {
+      search(inputValue)
+      setSearchValue(inputValue.trim())
     }
   }
 
@@ -30,8 +31,8 @@ const Search = ({ search }: IProps) => {
         className={styles.input}
         type="text"
         placeholder="Enter game name"
-        value={searchValue}
-        onChange={({ target }) => setSearchValue(target.value)}
+        value={inputValue}
+        onChange={({ target }) => setInputValue(target.value)}
       />
       <button className={styles.button}>Search</button>
     </form>
