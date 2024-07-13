@@ -3,25 +3,27 @@ import styles from './Search.module.scss'
 import useLocalStorage from '../../hooks/useLocalStorage'
 
 interface IProps {
-  search: (value: string) => void
+  setSearchValue: (value: string) => void
+  onSearchChange: (search: string) => void
 }
 
-const Search = ({ search }: IProps) => {
-  const [searchValue, setSearchValue] = useLocalStorage<string>(
+const Search = ({ setSearchValue, onSearchChange }: IProps) => {
+  const [savedSearchValue, setSavedSearchValue] = useLocalStorage<string>(
     'searchValue',
     '',
   )
-  const [inputValue, setInputValue] = useState<string>(searchValue)
+  const [inputValue, setInputValue] = useState<string>(savedSearchValue)
 
   useEffect(() => {
-    search(searchValue)
-  }, [search, searchValue])
+    setSearchValue(savedSearchValue)
+  }, [setSearchValue, savedSearchValue])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (inputValue) {
-      search(inputValue)
       setSearchValue(inputValue.trim())
+      setSavedSearchValue(inputValue.trim())
+      onSearchChange(inputValue.trim())
     }
   }
 

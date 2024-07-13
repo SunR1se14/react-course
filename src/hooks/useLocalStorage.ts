@@ -4,8 +4,10 @@ const useLocalStorage = <T>(
   key: string,
   initialValue: T,
 ): [T, Dispatch<SetStateAction<T>>] => {
-  const item = localStorage.getItem(key)
-  const [value, setValue] = useState<T>(item ? JSON.parse(item) : initialValue)
+  const [value, setValue] = useState<T>(() => {
+    const savedValue = localStorage.getItem(key)
+    return savedValue ? JSON.parse(savedValue) : initialValue
+  })
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value))
