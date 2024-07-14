@@ -14,13 +14,18 @@ const GameList = ({ games, isLoading }: Props) => {
   }
 
   return (
-    <div className={styles['card-list']}>
-      {games.map(game => (
-        <NavLink key={game.id} to={`details/${game.slug}`}>
-          <GameCard {...game} />
-        </NavLink>
-      ))}
-    </div>
+    <>
+      {!isLoading && !games.length && (
+        <div className={styles['not-found']}>Nothing found</div>
+      )}
+      <div className={styles['card-list']}>
+        {games.map(game => (
+          <NavLink key={game.id} to={`details/${game.slug}`}>
+            <GameCard {...game} />
+          </NavLink>
+        ))}
+      </div>
+    </>
   )
 }
 

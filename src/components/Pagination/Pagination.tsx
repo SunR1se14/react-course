@@ -44,11 +44,19 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: IProps) => {
 
   return (
     <div className={styles.pagination}>
-      <button onClick={handlePrevious} disabled={currentPage === 1}>
+      <button
+        data-testid="prev"
+        onClick={handlePrevious}
+        disabled={currentPage === 1}
+      >
         <img src="/assets/img/arrow_back.svg" alt="Arrow icon" />
       </button>
       {renderPageNumbers()}
-      <button onClick={handleNext} disabled={currentPage === totalPages}>
+      <button
+        data-testid="next"
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+      >
         <img src="/assets/img/arrow_forward.svg" alt="Arrow icon" />
       </button>
     </div>

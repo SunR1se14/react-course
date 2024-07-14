@@ -68,9 +68,6 @@ const Home = () => {
         setSearchValue={setSearchValue}
         onSearchChange={handleSearchChange}
       />
-      {!isLoading && !games.length && (
-        <div className={styles['not-found']}>Nothing found</div>
-      )}
       <div className={styles.wrapper}>
         <GameList games={games} isLoading={isLoading} />
         <Outlet />

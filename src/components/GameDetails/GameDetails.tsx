@@ -6,6 +6,7 @@ import { API_KEY, API_URL } from '../../utils/constants'
 import NoImage from '../../assets/no-image.jpg'
 
 const GameDetails = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { slug } = useParams()
   const navigate = useNavigate()
   const [game, setGame] = useState<IGame>()
@@ -19,9 +20,16 @@ const GameDetails = () => {
 
   useEffect(() => {
     const getGame = async () => {
-      const res = await fetch(`${API_URL}/${slug}?key=${API_KEY}&page_size=9`)
-      const gameItem: IGame = await res.json()
-      setGame(gameItem)
+      try {
+        setIsLoading(true)
+        const res = await fetch(`${API_URL}/${slug}?key=${API_KEY}&page_size=9`)
+        const gameItem: IGame = await res.json()
+        setGame(gameItem)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     getGame()
@@ -42,6 +50,10 @@ const GameDetails = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [navigate])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className={styles['details-wrapper']} ref={outletRef}>
