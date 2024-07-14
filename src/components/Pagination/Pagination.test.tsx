@@ -1,32 +1,18 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import Pagination from './Pagination'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 
 describe('Pagination', () => {
   it('renders page numbers correctly', () => {
     render(
       <MemoryRouter initialEntries={['/details']}>
-        <Routes>
-          <Route
-            path="/details"
-            element={
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                onPageChange={() => {}}
-              />
-            }
-          />
-        </Routes>
+        <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
       </MemoryRouter>,
     )
 
-    const pageButtons = screen.getAllByRole('button')
-    const paginationButtons = pageButtons.filter(btn =>
-      btn.className.includes('pagination_btn'),
-    )
-    expect(paginationButtons).toHaveLength(5) // Assuming totalPages is 5
+    const pageButtons = screen.getAllByRole('button', { name: /[0-9]+/ })
+    expect(pageButtons).toHaveLength(5)
 
     expect(screen.getByText('1')).toHaveClass(
       '_pagination_btn_08165b _active_08165b',
@@ -38,18 +24,11 @@ describe('Pagination', () => {
 
     render(
       <MemoryRouter initialEntries={['/details']}>
-        <Routes>
-          <Route
-            path="/details"
-            element={
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                onPageChange={onPageChangeMock}
-              />
-            }
-          />
-        </Routes>
+        <Pagination
+          currentPage={1}
+          totalPages={5}
+          onPageChange={onPageChangeMock}
+        />
       </MemoryRouter>,
     )
 
@@ -61,26 +40,73 @@ describe('Pagination', () => {
     })
   })
 
-  it('updates URL parameters correctly when clicking page number', async () => {
-    render(
+  it('disables previous button on first page and next button on last page', () => {
+    const { rerender } = render(
       <MemoryRouter initialEntries={['/details']}>
-        <Routes>
-          <Route
-            path="/details"
-            element={
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                onPageChange={() => {}}
-              />
-            }
-          />
-        </Routes>
+        <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
       </MemoryRouter>,
     )
 
-    const pageButton = screen.getByText('3')
+    const prevButton = screen.getByTestId('prev')
+    const nextButton = screen.getByTestId('next')
 
-    expect(pageButton).toBeInTheDocument()
+    expect(prevButton).toBeDisabled()
+    expect(nextButton).not.toBeDisabled()
+
+    rerender(
+      <MemoryRouter initialEntries={['/details']}>
+        <Pagination currentPage={2} totalPages={5} onPageChange={() => {}} />
+      </MemoryRouter>,
+    )
+
+    expect(prevButton).not.toBeDisabled()
+    expect(nextButton).not.toBeDisabled()
+
+    rerender(
+      <MemoryRouter initialEntries={['/details']}>
+        <Pagination currentPage={5} totalPages={5} onPageChange={() => {}} />
+      </MemoryRouter>,
+    )
+
+    expect(prevButton).not.toBeDisabled()
+    expect(nextButton).toBeDisabled()
+  })
+
+  it('renders arrow icons in navigation buttons', () => {
+    render(
+      <MemoryRouter initialEntries={['/details']}>
+        <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
+      </MemoryRouter>,
+    )
+
+    const prevButtonIcon = screen.getByTestId('prev').querySelector('img')
+    const nextButtonIcon = screen.getByTestId('next').querySelector('img')
+
+    expect(prevButtonIcon).toHaveAttribute('src', '/assets/img/arrow_back.svg')
+    expect(nextButtonIcon).toHaveAttribute(
+      'src',
+      '/assets/img/arrow_forward.svg',
+    )
+  })
+
+  it('calls onPageChange correctly when clicking navigation buttons', () => {
+    const onPageChangeMock = vi.fn()
+
+    render(
+      <Pagination
+        currentPage={3}
+        totalPages={5}
+        onPageChange={onPageChangeMock}
+      />,
+    )
+
+    const prevButton = screen.getByTestId('prev')
+    const nextButton = screen.getByTestId('next')
+
+    fireEvent.click(prevButton)
+    expect(onPageChangeMock).toHaveBeenCalledWith(2)
+
+    fireEvent.click(nextButton)
+    expect(onPageChangeMock).toHaveBeenCalledWith(4)
   })
 })
