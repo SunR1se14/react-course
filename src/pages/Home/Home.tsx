@@ -7,7 +7,7 @@ import { API_KEY, API_URL } from '../../utils/constants'
 import useLocalStorage from '../../hooks/useLocalStorage'
 import styles from './Home.module.scss'
 import Pagination from '../../components/Pagination/Pagination'
-import { useSearchParams } from 'react-router-dom'
+import { Outlet, useSearchParams } from 'react-router-dom'
 
 const Home = () => {
   const [games, setGames] = useState<IGame[]>([])
@@ -71,12 +71,17 @@ const Home = () => {
       {!isLoading && !games.length && (
         <div className={styles['not-found']}>Nothing found</div>
       )}
-      <GameList games={games} isLoading={isLoading} />
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      <div className={styles.wrapper}>
+        <GameList games={games} isLoading={isLoading} />
+        <Outlet />
+      </div>
+      {!isLoading && games.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   )
 }

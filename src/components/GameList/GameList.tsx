@@ -1,6 +1,7 @@
 import GameCard from '../GameCard/GameCard'
 import { IGame } from '../../types/game.interface'
 import styles from './GameList.module.scss'
+import { NavLink } from 'react-router-dom'
 
 interface Props {
   games: IGame[]
@@ -15,7 +16,9 @@ const GameList = ({ games, isLoading }: Props) => {
   return (
     <div className={styles['card-list']}>
       {games.map(game => (
-        <GameCard key={game.id} {...game} />
+        <NavLink key={game.id} to={`details/${game.slug}`}>
+          <GameCard {...game} />
+        </NavLink>
       ))}
     </div>
   )

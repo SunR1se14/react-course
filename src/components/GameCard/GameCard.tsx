@@ -24,11 +24,13 @@ const GameCard = ({ name, background_image, rating, genres }: IGame) => {
           <img src={NoImage} alt="No image" />
         )}
       </div>
-      <h4 className={styles.title}>{name}</h4>
-      <div className={cn(styles.rating, bgRating())}>
-        {rating.toFixed(1)} / 5
+      <div className={styles['card-wrapper']}>
+        <h4 className={styles.title}>{name}</h4>
+        <div className={cn(styles.rating, bgRating())}>
+          {rating.toFixed(1)} / 5
+        </div>
+        <div className={styles.genre}>{genresArr}</div>
       </div>
-      <div className={styles.genre}>{genresArr}</div>
     </div>
   )
 }
