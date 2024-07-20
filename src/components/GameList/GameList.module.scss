@@ -25,3 +25,12 @@
   margin: 0 auto;
   width: 100%;
 }
+
+.game-card-container {
+  position: relative;
+}
+.favorite {
+  position: absolute;
+  bottom: 35px;
+  right: 0;
+}
