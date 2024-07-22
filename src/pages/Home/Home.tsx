@@ -8,6 +8,8 @@ import useLocalStorage from '../../hooks/useLocalStorage'
 import styles from './Home.module.scss'
 import Pagination from '../../components/Pagination/Pagination'
 import { Outlet, useSearchParams } from 'react-router-dom'
+import SelectedItems from '../../components/SelectedItems/SelectedItems'
+import { useAppSelector } from '../../hooks/useAppSelector'
 
 const Home = () => {
   const [games, setGames] = useState<IGame[]>([])
@@ -17,6 +19,7 @@ const Home = () => {
     'searchValue',
     '',
   )
+  const { favorites } = useAppSelector(s => s)
   const [searchParams, setSearchParams] = useSearchParams()
   const page = parseInt(searchParams.get('page') || '1')
   const search = searchParams.get('search') || searchValue
@@ -60,26 +63,29 @@ const Home = () => {
   }
 
   return (
-    <div className="container">
-      <h1 className="title">
-        Game <span>Galaxy</span>
-      </h1>
-      <Search
-        setSearchValue={setSearchValue}
-        onSearchChange={handleSearchChange}
-      />
-      <div className={styles.wrapper}>
-        <GameList games={games} isLoading={isLoading} />
-        <Outlet />
-      </div>
-      {!isLoading && games.length > 0 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+    <>
+      <div className="container">
+        <h1 className="title">
+          Game <span>Galaxy</span>
+        </h1>
+        <Search
+          setSearchValue={setSearchValue}
+          onSearchChange={handleSearchChange}
         />
-      )}
-    </div>
+        <div className={styles.wrapper}>
+          <GameList games={games} isLoading={isLoading} />
+          <Outlet />
+        </div>
+        {!isLoading && games.length > 0 && (
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
+      {favorites.length && <SelectedItems />}
+    </>
   )
 }
 

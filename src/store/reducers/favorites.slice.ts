@@ -16,6 +16,9 @@ export const favoritesSlice = createSlice({
         state.push(action.payload)
       }
     },
+    unSelectAll: state => {
+      state.splice(0, state.length)
+    },
   },
 })
 
