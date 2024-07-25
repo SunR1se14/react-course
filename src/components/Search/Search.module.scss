@@ -5,19 +5,20 @@
   align-items: center;
   gap: 35px;
   margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .input {
-  background-color: #202020;
+  background-color: var(--input-bg-color);
   border: none;
   border-radius: 200px;
   height: 60px;
   padding: 15px;
   max-width: 400px;
   width: 100%;
-  color: #fff;
   font-size: 20px;
   outline: none;
+  color: var(--text-color);
   &::placeholder {
     color: #a0a0a0;
   }
@@ -36,6 +37,7 @@
   font-size: 18px;
   font-weight: 700;
   transition: background-color 0.25s;
+  color: #fff;
 
   &:hover {
     background-color: #0263be;

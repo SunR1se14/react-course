@@ -17,15 +17,17 @@
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background-color: #5b5b5b;
+  background-color: var(--bg-pagination-color);
 
   @media (any-hover: hover) {
     &:hover {
       background-color: #797979;
+      color: #fff;
     }
   }
 
   &.active {
     background-color: #0074e4;
+    color: #fff;
   }
 }

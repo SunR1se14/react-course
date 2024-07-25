@@ -10,6 +10,7 @@ import Pagination from '../../components/Pagination/Pagination'
 import { Outlet, useSearchParams } from 'react-router-dom'
 import SelectedItems from '../../components/SelectedItems/SelectedItems'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import Header from '../../components/Header/Header'
 
 const Home = () => {
   const [games, setGames] = useState<IGame[]>([])
@@ -65,9 +66,7 @@ const Home = () => {
   return (
     <>
       <div className="container">
-        <h1 className="title">
-          Game <span>Galaxy</span>
-        </h1>
+        <Header />
         <Search
           setSearchValue={setSearchValue}
           onSearchChange={handleSearchChange}
@@ -84,7 +83,7 @@ const Home = () => {
           />
         )}
       </div>
-      {favorites.length && <SelectedItems />}
+      {favorites.length > 0 && <SelectedItems />}
     </>
   )
 }

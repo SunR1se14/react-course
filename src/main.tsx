@@ -6,13 +6,16 @@ import { RouterProvider } from 'react-router-dom'
 import router from './router/router'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
+import ThemeContextProvider from './context/ThemeContextProvider'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <ErrorBoundary>
-        <RouterProvider router={router} />
-      </ErrorBoundary>
+      <ThemeContextProvider>
+        <ErrorBoundary>
+          <RouterProvider router={router} />
+        </ErrorBoundary>
+      </ThemeContextProvider>
     </Provider>
   </React.StrictMode>,
 )

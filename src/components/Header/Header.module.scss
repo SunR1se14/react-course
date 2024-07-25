@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.title {
+  font-size: 46px;
+  text-align: center;
+  font-weight: 700;
+  span {
+    color: #0074e4;
+  }
+}
+
+.buttonTheme {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+}
