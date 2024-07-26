@@ -1,16 +1,18 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './GameDetails.module.scss'
-import { useEffect, useRef, useState } from 'react'
-import { IGame } from '../../types/game.interface'
-import { API_KEY, API_URL } from '../../utils/constants'
+import { useEffect, useRef } from 'react'
 import NoImage from '../../assets/no-image.jpg'
+import { gamesApi } from '../../services/GamesService'
 
 const GameDetails = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { slug } = useParams()
   const navigate = useNavigate()
-  const [game, setGame] = useState<IGame>()
   const outletRef = useRef<HTMLDivElement>(null)
+
+  const { data: game, isFetching } = gamesApi.useGetGameQuery({
+    slug: slug || '',
+    pageSize: 1,
+  })
 
   const genresArr = game && game.genres.map(genre => genre.name).join(', ')
   const developersArr =
@@ -18,22 +20,22 @@ const GameDetails = () => {
   const platformsArr =
     game && game.platforms.map(platform => platform.platform.name).join(', ')
 
-  useEffect(() => {
-    const getGame = async () => {
-      try {
-        setIsLoading(true)
-        const res = await fetch(`${API_URL}/${slug}?key=${API_KEY}&page_size=9`)
-        const gameItem: IGame = await res.json()
-        setGame(gameItem)
-      } catch (err) {
-        console.log(err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  // useEffect(() => {
+  //   const getGame = async () => {
+  //     try {
+  //       setIsLoading(true)
+  //       const res = await fetch(`${API_URL}/${slug}?key=${API_KEY}&page_size=9`)
+  //       const gameItem: IGame = await res.json()
+  //       setGame(gameItem)
+  //     } catch (err) {
+  //       console.log(err)
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
 
-    getGame()
-  }, [slug])
+  //   getGame()
+  // }, [slug])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,7 +53,7 @@ const GameDetails = () => {
     }
   }, [navigate])
 
-  if (isLoading) {
+  if (isFetching) {
     return <div>Loading...</div>
   }
 
