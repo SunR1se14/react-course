@@ -1,0 +1,33 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 55px;
+  gap: 15px;
+
+  @media (max-width: 575.98px) {
+    gap: 10px;
+  }
+}
+
+.pagination_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: var(--bg-pagination-color);
+
+  @media (any-hover: hover) {
+    &:hover {
+      background-color: #797979;
+      color: #fff;
+    }
+  }
+
+  &.active {
+    background-color: #0074e4;
+    color: #fff;
+  }
+}

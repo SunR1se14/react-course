@@ -1,0 +1,25 @@
+.error-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  gap: 25px;
+}
+
+.error-title {
+  font-size: 32px;
+}
+
+.error-desc {
+  font-size: 26px;
+}
+
+.error-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background-color: #0074e4;
+  border-radius: 10px;
+}
