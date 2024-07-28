@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest'
+import { describe, expect, it, beforeEach, vi, Mock } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import GameList from './GameList'
@@ -20,8 +20,10 @@ describe('GameList', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(useAppDispatch as vi.Mock).mockReturnValue(mockDispatch)
-    ;(useAppSelector as vi.Mock).mockReturnValue({ favorites: mockFavorites })
+    ;(useAppDispatch as unknown as Mock).mockReturnValue(mockDispatch)
+    ;(useAppSelector as unknown as Mock).mockReturnValue({
+      favorites: mockFavorites,
+    })
   })
 
   it('should display numbers of cards', () => {
@@ -126,7 +128,9 @@ describe('GameList', () => {
       },
     ]
 
-    ;(useAppSelector as vi.Mock).mockReturnValue({ favorites: [games[0]] })
+    ;(useAppSelector as unknown as Mock).mockReturnValue({
+      favorites: [games[0]],
+    })
 
     render(
       <Router>
