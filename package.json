@@ -20,11 +20,6 @@
       "npx eslint --fix"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm test"
-    }
-  },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
     "clsx": "^2.1.1",
