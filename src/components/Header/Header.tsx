@@ -5,9 +5,7 @@ import { ThemeContext } from '../../context/ThemeContextProvider'
 const Header = () => {
   const themeContext = useContext(ThemeContext)
 
-  if (!themeContext) {
-    throw new Error('useContext must be used within a ThemeContextProvider')
-  }
+  if (!themeContext) return
 
   const [theme, setTheme] = themeContext
 

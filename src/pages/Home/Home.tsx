@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import cn from 'clsx'
+import { useContext, useState } from 'react'
 import Search from '../../components/Search/Search'
 import GameList from '../../components/GameList/GameList'
 import useLocalStorage from '../../hooks/useLocalStorage'
@@ -9,6 +10,7 @@ import SelectedItems from '../../components/SelectedItems/SelectedItems'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import Header from '../../components/Header/Header'
 import { gamesApi } from '../../services/GamesService'
+import { ThemeContext } from '../../context/ThemeContextProvider'
 
 const Home = () => {
   const [totalPages] = useState<number>(9)
@@ -47,8 +49,18 @@ const Home = () => {
 
   const games = data?.results
 
+  const themeContext = useContext(ThemeContext)
+
+  if (!themeContext) return
+
+  const [theme] = themeContext
+
   return (
-    <>
+    <div
+      className={cn('app', {
+        ['light']: theme === 'light',
+      })}
+    >
       <div className="container">
         <Header />
         <Search
@@ -68,7 +80,7 @@ const Home = () => {
         )}
       </div>
       {favorites.length > 0 && <SelectedItems />}
-    </>
+    </div>
   )
 }
 

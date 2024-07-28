@@ -27,7 +27,11 @@ const GameList = ({ games, isLoading }: Props) => {
       )}
       <div className={styles['card-list']}>
         {games.map(game => (
-          <div key={game.id} className={styles['game-card-container']}>
+          <div
+            key={game.id}
+            aria-label={`Game ${game.name}`}
+            className={styles['game-card-container']}
+          >
             <NavLink to={`details/${game.slug}`}>
               <GameCard {...game} />
             </NavLink>

@@ -3,9 +3,9 @@ import { describe, it, vi, beforeEach, expect } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import GameDetails from './GameDetails'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { IGame } from '../../types/game.interface'
+import { gamesApi } from '../../services/GamesService'
 
-const mockGame: IGame = {
+const mockGame = {
   id: 1,
   rating: 4,
   slug: 'slug',
@@ -17,12 +17,6 @@ const mockGame: IGame = {
   platforms: [{ platform: { name: 'Test Platform' } }],
 }
 
-const mockFetch = vi.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve(mockGame),
-  }),
-)
-
 const mockNavigate = vi.fn()
 
 vi.mock('react-router-dom', async () => {
@@ -33,12 +27,23 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
+vi.mock('../../services/GamesService', () => ({
+  gamesApi: {
+    useGetGameQuery: vi.fn(),
+  },
+}))
+
 describe('GameDetails', () => {
   beforeEach(() => {
-    vi.stubGlobal('fetch', mockFetch)
+    vi.resetAllMocks()
   })
 
-  it('should renders loading indicator while fetching data', () => {
+  it('should render loading indicator while fetching data', async () => {
+    ;(gamesApi.useGetGameQuery as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: null,
+      isFetching: true,
+    })
+
     render(
       <MemoryRouter initialEntries={['/details/slug']}>
         <Routes>
@@ -46,11 +51,16 @@ describe('GameDetails', () => {
         </Routes>
       </MemoryRouter>,
     )
-    const loadingText = screen.getByText(/Loading.../)
-    expect(loadingText).toBeInTheDocument()
+
+    expect(screen.getByText(/Loading.../)).toBeInTheDocument()
   })
 
-  it('should renders game details correctly after data is loaded', async () => {
+  it('should render game details correctly after data is loaded', async () => {
+    ;(gamesApi.useGetGameQuery as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: mockGame,
+      isFetching: false,
+    })
+
     render(
       <MemoryRouter initialEntries={['/details/slug']}>
         <Routes>
@@ -59,7 +69,9 @@ describe('GameDetails', () => {
       </MemoryRouter>,
     )
 
-    await waitFor(() => expect(mockFetch).toHaveBeenCalled())
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading.../)).not.toBeInTheDocument()
+    })
 
     const title = screen.getByText(mockGame.name)
     const releasedDate = screen.getByText(new RegExp(mockGame.released))
@@ -79,6 +91,11 @@ describe('GameDetails', () => {
   })
 
   it('should clicking close button navigates back', async () => {
+    ;(gamesApi.useGetGameQuery as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: mockGame,
+      isFetching: false,
+    })
+
     render(
       <MemoryRouter initialEntries={['/details/slug']}>
         <Routes>
@@ -87,7 +104,9 @@ describe('GameDetails', () => {
       </MemoryRouter>,
     )
 
-    await waitFor(() => expect(mockFetch).toHaveBeenCalled())
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading.../)).not.toBeInTheDocument()
+    })
 
     const closeButton = screen.getByRole('button', { name: /Close/i })
     userEvent.click(closeButton)

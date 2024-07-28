@@ -30,6 +30,7 @@ const Search = ({ setSearchValue, onSearchChange }: IProps) => {
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <input
+        aria-label="Search input"
         className={styles.input}
         type="text"
         placeholder="Enter game name"

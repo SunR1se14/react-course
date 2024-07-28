@@ -20,23 +20,6 @@ const GameDetails = () => {
   const platformsArr =
     game && game.platforms.map(platform => platform.platform.name).join(', ')
 
-  // useEffect(() => {
-  //   const getGame = async () => {
-  //     try {
-  //       setIsLoading(true)
-  //       const res = await fetch(`${API_URL}/${slug}?key=${API_KEY}&page_size=9`)
-  //       const gameItem: IGame = await res.json()
-  //       setGame(gameItem)
-  //     } catch (err) {
-  //       console.log(err)
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   }
-
-  //   getGame()
-  // }, [slug])
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

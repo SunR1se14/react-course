@@ -3,22 +3,14 @@ import { API_KEY, API_URL } from '../utils/constants'
 import { IResponse } from '../types/response.interface'
 import { IGame } from '../types/game.interface'
 
-interface GetGamesArgs {
-  pageSize: number
-  page: number
-  search: string
-}
-
-interface GetGameArgs {
-  pageSize: number
-  slug: string
-}
-
 export const gamesApi = createApi({
   reducerPath: 'gamesApi',
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: build => ({
-    getGames: build.query<IResponse, GetGamesArgs>({
+    getGames: build.query<
+      IResponse,
+      { pageSize: number; page: number; search: string }
+    >({
       query: ({ pageSize, page, search }) => ({
         url: '/games',
         params: {
@@ -29,7 +21,7 @@ export const gamesApi = createApi({
         },
       }),
     }),
-    getGame: build.query<IGame, GetGameArgs>({
+    getGame: build.query<IGame, { pageSize: number; slug: string }>({
       query: ({ slug, pageSize }) => ({
         url: `/games/${slug}`,
         params: {
