@@ -1,10 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm test
-
-if [ $? -eq 0 ]; then
-  exit 0
-else
-  exit 1
-fi
+npm test -- --run
